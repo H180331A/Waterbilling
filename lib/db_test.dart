@@ -1,138 +1,79 @@
-import 'dart:async';
+import 'dart:io';
 
-import 'package:path/path.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_water/models/reading.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Helperx {
-  Future<Database> database;
-  // ignore: non_constant_identifier_names
-  Helper() {
-    this.setUpDb();
-  }
+  static Helperx _databaseHelper;
+  static Database _database;
 
-  setUpDb() async {
-    this.database = openDatabase(
-      join(await getDatabasesPath(), 'waterbilling.db'),
-      onCreate: (db, version) {
-        return db.execute(
-            "CREATE TABLE waterbilling(id INTEGER PRIMARY KEY, accountname TEXT, accountno TEXT,previousreading TEXT,homeaddress TEXT,currentreading TEXT,model TEXT,meternumber TEXT,status TEXT)");
-      },
-      version: 1,
-    );
-  }
+  String waterBillingTable = 'waterbilling';
+  String id = 'id';
+  String accountname = 'accountname';
+  String accountno = 'accountno';
+  String model = 'model';
+  String previousreading = 'previousreading';
+  String currentreading = 'currentreading';
+  String meternumber = 'meternumber';
+  String homeaddress = 'homeaddress';
+  String status = 'status';
+  String isPosted = 'isPosted';
 
-  Future<bool> insertReading(Reading reading) async {
-    // Get a reference to the database.
-    Database db = await database;
-    try {
-      if (db == null) {
-        database = await setUpDb();
-        db = await database;
-      }
-      print(reading);
+  Helperx._createInstance();
 
-      // Insert the Dog into the correct table. Also specify the
-      // `conflictAlgorithm`. In this case, if the same dog is inserted
-      // multiple times, it replaces the previous data.
-      await db.insert(
-        'waterbilling',
-        reading.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      return true;
-    } on Exception catch (e) {
-      print(e);
-      return false;
+  factory Helperx() {
+    if (_databaseHelper == null) {
+      _databaseHelper = Helperx._createInstance();
     }
+    return _databaseHelper;
   }
 
-  Future<List<Reading>> readings() async {
-    // Get a reference to the database.
-    final Database db = await database;
-
-    // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.query('waterbilling');
-
-    // Convert the List<Map<String, dynamic> into a List<Dog>.
-    return List.generate(maps.length, (i) {
-      return Reading(
-        id: maps[i]['id'],
-        status: maps[i]['status'],
-        accountname: maps[i]['accountname'],
-        accountno: maps[i]['accountname'],
-        model: maps[i]['model'],
-        previousreading: maps[i]['previousname'],
-        currentreading: maps[i]['current'],
-        homeaddress: maps[i]['homeaddress'],
-      );
-    });
+  Future<Database> get database async {
+    if (_database == null) {
+      _database = await initializeDatabase();
+    }
+    return _database;
   }
 
-  Future<void> updateReading(Reading reading) async {
-    final db = await database;
-    await db.update(
-      'waterbilling',
+  Future<Database> initializeDatabase() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = directory.path + "waterbilling.db";
+
+    var waterBillingDatabase = await openDatabase(
+      path,
+      version: 1,
+      onCreate: _createDb,
+    );
+    return waterBillingDatabase;
+  }
+
+  void _createDb(Database db, int newVersion) async {
+    await db.execute(
+        'CREATE TABLE $waterBillingTable($id INTEGER PRIMARY KEY AUTOINCREMENT, $accountname TEXT, $accountno TEXT, $previousreading TEXT, $homeaddress TEXT, $currentreading TEXT, $model TEXT, $meternumber TEXT, $status TEXT, $isPosted TEXT)');
+  }
+
+  Future<List<Map<String, dynamic>>> getReadingsList() async {
+    Database db = await this.database;
+    var result = await db.query(waterBillingTable, orderBy: '$id ASC');
+    return result;
+  }
+
+  Future<int> saveReading(Reading reading) async {
+    Database db = await this.database;
+    var result = await db.insert(waterBillingTable, reading.toMap());
+    return result;
+  }
+
+  Future<int> updateReading(Reading reading) async {
+    var db = await this.database;
+    var result = await db.update(
+      waterBillingTable,
       reading.toMap(),
-      where: "id = ?",
+      where: '$id = ?',
       whereArgs: [reading.id],
     );
-  }
-
-  Future<void> deleteReading(int id) async {
-    final db = await database;
-    await db.delete(
-      'waterbilling',
-      where: "id = ?",
-      whereArgs: [id],
-    );
-  }
-
-  var reading = Reading(
-    id: 0,
-    accountname: 'Fido',
-    meternumber: '566778',
-  );
-}
-
-class Reading {
-  final int id;
-  final String accountname;
-  final String accountno;
-  final String model;
-  final String previousreading;
-  final String currentreading;
-  final String meternumber;
-  final String homeaddress;
-  final String status;
-
-  Reading(
-      {this.id,
-      this.accountname,
-      this.accountno,
-      this.currentreading,
-      this.homeaddress,
-      this.meternumber,
-      this.model,
-      this.status,
-      this.previousreading});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'accountname': accountname,
-      'accountno': accountno,
-      'model': model,
-      'previousreading': previousreading,
-      'currentreading': currentreading,
-      'meternumber': meternumber,
-      'homeaddress': homeaddress,
-    };
-  }
-
-  // Implement toString to make it easier to see information about
-  // each dog when using the print statement.
-  @override
-  String toString() {
-    return 'Reading{id: $id, accountno: $accountno, accountname: $accountname,status: $status,meternumber:$meternumber,previousreading:$previousreading,currentreading:$currentreading,model:$model}';
+    return result;
   }
 }
