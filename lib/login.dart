@@ -67,7 +67,7 @@ class _State extends State<LoginPage> {
                   child: TextField(
                     obscureText: true,
                     controller: passwordController,
-                    decoration: InputDecoration(
+                    decoration: new InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
                     ),
