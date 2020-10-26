@@ -17,19 +17,7 @@ class _State extends State<LoginPage> {
         centerTitle: true,
         title: Text('MUTARE CITY COUNCIL'),
       ),
-      body: Stack(
-        children: [
-          Container(
-            height: 580,
-            width: 375,
-            child: Image.asset(
-              'assets/mutare.png',
-              height: 250,
-              width: 220,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
+      body: Padding(
             padding: EdgeInsets.all(10),
             child: ListView(
               children: <Widget>[
@@ -99,8 +87,6 @@ class _State extends State<LoginPage> {
               ],
             ),
           ),
-        ],
-      ),
     );
   }
 }
