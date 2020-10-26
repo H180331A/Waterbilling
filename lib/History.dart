@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_water/Home_Page.dart';
 import 'package:flutter_water/db_test.dart';
+import 'package:flutter_water/models/reading.dart';
 
 class History extends StatefulWidget {
   @override
@@ -115,7 +116,7 @@ class _HistoryState extends State<History> {
                             meternumber: meternumberController.text,
                             status: statusController.text,
                           );
-                          var isSaved = await helper.insertReading(reading);
+                          var isSaved = await helper.saveReading(reading);
                           print(isSaved);
                         },
                         child: Text(

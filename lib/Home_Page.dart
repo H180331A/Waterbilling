@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_water/History.dart';
 import 'package:flutter_water/Routes.dart';
 import 'package:flutter_water/login.dart';
+import 'package:flutter_water/saved.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,6 +17,13 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => History(),
+              ),
+            );
+            break;
+          case "Saved Routes":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SavedRoutes(),
               ),
             );
             break;
@@ -35,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'History', 'Back'}.map((String choice) {
+              return {'History', 'Saved Routes', 'Back'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -50,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.search),
         onPressed: () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => Routes(),
             ),
@@ -62,12 +70,10 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             Container(
-              height: 570,
-              width: 400,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               child: Image.asset(
                 'assets/background.png',
-                height: 215,
-                width: 250,
                 fit: BoxFit.cover,
               ),
             ),

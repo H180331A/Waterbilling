@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_water/Home_Page.dart';
 import 'package:flutter_water/db_test.dart';
+import 'package:flutter_water/models/reading.dart';
 
 class Routes extends StatefulWidget {
   @override
@@ -194,23 +197,30 @@ class _RoutesState extends State<Routes> {
                         onPressed: () async {
                           var helper = new Helperx();
                           var reading = new Reading(
-                              id: 1,
-                              accountname: accountnameController.text,
-                              accountno: accountnoController.text,
-                              model: modelController.text,
-                              currentreading: currentreadingController.text,
-                              previousreading: previousreadingController.text,
-                              homeaddress: homeaddressController.text);
-                          print(reading);
-                          // var isSaved = await helper.insertReading(reading);
-                          // if (isSaved) {
-                          //   final snackBar = SnackBar(content: Text("Saved"));
-                          //   Scaffold.of(context).showSnackBar(snackBar);
-                          // } else {
-                          //   final snackBar =
-                          //       SnackBar(content: Text("Not saved. Try again"));
-                          //   Scaffold.of(context).showSnackBar(snackBar);
-                          // }
+                            id: 6,
+                            accountname: accountnameController.text,
+                            accountno: accountnoController.text,
+                            model: modelController.text,
+                            currentreading: currentreadingController.text,
+                            previousreading: previousreadingController.text,
+                            homeaddress: homeaddressController.text,
+                          );
+                          var isSaved = await helper.saveReading(reading);
+                          print(isSaved);
+                          if (isSaved != null) {
+                            // var snackBar = SnackBar(
+                            //   content: Text("Route saved"),
+                            // );
+                            // Scaffold.of(context).showSnackBar(snackBar);
+                            print("data saved");
+                          } else {
+                            // var snackBar = SnackBar(
+                            //   content: Text("Error. Check code"),
+                            //   backgroundColor: Colors.red,
+                            // );
+                            // Scaffold.of(context).showSnackBar(snackBar);
+                            print("data not saved");
+                          }
                         },
                         child: Text(
                           'Save',
