@@ -112,7 +112,7 @@ class _HistoryState extends State<History> {
                           var reading = new Reading(
                             id: 1,
                             accountno: accountnoController.text,
-                            model: modelController.text,
+                            // model: modelController.text,
                             meternumber: meternumberController.text,
                             status: statusController.text,
                           );

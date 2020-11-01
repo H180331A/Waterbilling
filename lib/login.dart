@@ -11,7 +11,6 @@ class _State extends State<LoginPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   Api _api = new Api();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +18,7 @@ class _State extends State<LoginPage> {
         centerTitle: true,
         title: Text('MUTARE CITY COUNCIL'),
       ),
+      // backgroundColor: Colors.teal,
       body: Builder(
         builder: (context) => Padding(
           padding: EdgeInsets.all(10),

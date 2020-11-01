@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_water/Home_Page.dart';
 import 'package:flutter_water/db_test.dart';
 import 'package:flutter_water/models/reading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Routes extends StatefulWidget {
   @override
@@ -117,7 +118,23 @@ class _RoutesState extends State<Routes> {
                         ),
                       ],
                     ),
-                  ),
+                    Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Go',
+                          style: TextStyle(fontSize: 23.0, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
@@ -185,26 +202,8 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: modelController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: "Model",
-                        ),
-                        readOnly: true,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextFormField(
-                        controller: previousReadingController,
+                        controller: previousreadingController,
+                        enabled: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Previous reading",
@@ -223,10 +222,30 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: currentReadingController,
+                        controller: previousReadingController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Current reading",
+                        ),
+                        readOnly: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.1),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextFormField(
+                        controller: unitsController,
+                        enabled: false
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: "Units",
                         ),
                       ),
                     ),
@@ -256,7 +275,15 @@ class _RoutesState extends State<Routes> {
                             //   content: Text("Route saved"),
                             // );
                             // Scaffold.of(context).showSnackBar(snackBar);
-                            print("data saved");
+                            // print("data saved");
+                            Fluttertoast.showToast(
+                                msg: "This is Center Short Toast",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.blue,
+                                fontSize: 16.0);
                           } else {
                             // var snackBar = SnackBar(
                             //   content: Text("Error. Check code"),

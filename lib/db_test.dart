@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_water/models/account_data.dart';
 import 'package:flutter_water/models/reading.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Helperx {
@@ -14,7 +13,7 @@ class Helperx {
   String id = 'id';
   String accountname = 'accountname';
   String accountno = 'accountno';
-  String model = 'model';
+  String units = 'units';
   String previousreading = 'previousreading';
   String currentreading = 'currentreading';
   String meternumber = 'meternumber';
@@ -39,7 +38,7 @@ class Helperx {
   }
 
   Future<Database> initializeDatabase() async {
-    Directory directory = await getApplicationDocumentsDirectory();
+    Directory directory = new Directory(await getDatabasesPath());
     String path = directory.path + "waterbilling.db";
 
     var waterBillingDatabase = await openDatabase(

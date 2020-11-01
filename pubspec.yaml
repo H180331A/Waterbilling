@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   sqflite:
   path:
-  path_provider:
+  fluttertoast: ^7.1.1
   cupertino_icons: ^0.1.3
   dropdownfield: ^1.0.3
   http:
@@ -34,11 +34,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images.png
-    - assets/mutare.png
-    - assets/meter.png
-    - assets/background.png
-  #   - images/a_dot_ham.jpeg
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
