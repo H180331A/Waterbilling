@@ -5,6 +5,7 @@ import 'package:flutter_water/MeterL.dart';
 import 'package:flutter_water/Routes.dart';
 import 'package:flutter_water/Settings.dart';
 import 'package:flutter_water/login.dart';
+import 'package:flutter_water/routes_page.dart';
 import 'package:flutter_water/saved.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,6 +41,13 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => Readings(),
+              ),
+            );
+            break;
+          case "Routes":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => RoutesPage(),
               ),
             );
             break;
