@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_water/models/reading.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Helperx {
@@ -13,7 +11,7 @@ class Helperx {
   String id = 'id';
   String accountname = 'accountname';
   String accountno = 'accountno';
-  String model = 'model';
+  String units = 'units';
   String previousreading = 'previousreading';
   String currentreading = 'currentreading';
   String meternumber = 'meternumber';
@@ -38,7 +36,7 @@ class Helperx {
   }
 
   Future<Database> initializeDatabase() async {
-    Directory directory = await getApplicationDocumentsDirectory();
+    Directory directory = new Directory(await getDatabasesPath());
     String path = directory.path + "waterbilling.db";
 
     var waterBillingDatabase = await openDatabase(
@@ -51,7 +49,7 @@ class Helperx {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $waterBillingTable($id INTEGER PRIMARY KEY AUTOINCREMENT, $accountname TEXT, $accountno TEXT, $previousreading TEXT, $homeaddress TEXT, $currentreading TEXT, $model TEXT, $meternumber TEXT, $status TEXT, $isPosted TEXT)');
+        'CREATE TABLE $waterBillingTable($id INTEGER PRIMARY KEY AUTOINCREMENT, $accountname TEXT, $accountno TEXT, $previousreading TEXT, $homeaddress TEXT, $currentreading TEXT, $units TEXT, $meternumber TEXT, $status TEXT, $isPosted TEXT)');
   }
 
   Future<List<Map<String, dynamic>>> getReadingsList() async {

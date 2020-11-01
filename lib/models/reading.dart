@@ -2,7 +2,7 @@ class Reading {
   final int id;
   final String accountname;
   final String accountno;
-  final String model;
+  final String units;
   final String previousreading;
   final String currentreading;
   final String meternumber;
@@ -16,16 +16,16 @@ class Reading {
       this.currentreading,
       this.homeaddress,
       this.meternumber,
-      this.model,
       this.status,
-      this.previousreading});
+      this.previousreading,
+      this.units});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'accountname': accountname,
       'accountno': accountno,
-      'model': model,
+      'units': units,
       'previousreading': previousreading,
       'currentreading': currentreading,
       'meternumber': meternumber,
@@ -37,6 +37,6 @@ class Reading {
   // each dog when using the print statement.
   @override
   String toString() {
-    return 'Reading{id: $id, accountno: $accountno, accountname: $accountname,status: $status,meternumber:$meternumber,previousreading:$previousreading,currentreading:$currentreading,model:$model}';
+    return 'Reading{id: $id, accountno: $accountno, accountname: $accountname,status: $status,meternumber:$meternumber,previousreading:$previousreading,currentreading:$currentreading,units:$units}';
   }
 }

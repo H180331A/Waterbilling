@@ -1,7 +1,9 @@
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_water/History.dart';
+import 'package:flutter_water/MeterL.dart';
 import 'package:flutter_water/Routes.dart';
+import 'package:flutter_water/Settings.dart';
 import 'package:flutter_water/login.dart';
 import 'package:flutter_water/saved.dart';
 
@@ -27,6 +29,20 @@ class _HomePageState extends State<HomePage> {
               ),
             );
             break;
+          case "Settings":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Settings(),
+              ),
+            );
+            break;
+          case "meter reading":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Readings(),
+              ),
+            );
+            break;
           case "Back":
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => LoginPage()),
@@ -43,7 +59,13 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'History', 'Saved Routes', 'Back'}.map((String choice) {
+              return {
+                'History',
+                'meter reading',
+                'Saved Routes',
+                'Settings',
+                'Back'
+              }.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),

@@ -1,10 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_water/Home_Page.dart';
 import 'package:flutter_water/db_test.dart';
 import 'package:flutter_water/models/reading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Routes extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class Routes extends StatefulWidget {
 class _RoutesState extends State<Routes> {
   TextEditingController accountnameController = TextEditingController();
   TextEditingController accountnoController = TextEditingController();
-  TextEditingController modelController = TextEditingController();
+  TextEditingController unitsController = TextEditingController();
   TextEditingController previousreadingController = TextEditingController();
   TextEditingController meternumberController = TextEditingController();
   TextEditingController currentreadingController = TextEditingController();
@@ -52,33 +51,48 @@ class _RoutesState extends State<Routes> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text("Meter Number")),
-                Container(
-                  child: Center(
-                    child: DropdownButton<String>(
-                      value: dropdownValue,
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(color: Colors.deepPurple),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
+                Row(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+                      child: Container(
+                        width: 250,
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.1),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.height,
+                            child: TextFormField(
+                              controller: meternumberController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                labelText: "Meter no",
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
-                      },
-                      items: <String>['One', 'Two', 'Three', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
                     ),
-                  ),
+                    Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Go',
+                          style: TextStyle(fontSize: 23.0, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
@@ -90,6 +104,7 @@ class _RoutesState extends State<Routes> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
                         controller: accountnoController,
+                        enabled: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Account no",
@@ -108,6 +123,7 @@ class _RoutesState extends State<Routes> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
                         controller: accountnameController,
+                        enabled: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Account name",
@@ -126,6 +142,7 @@ class _RoutesState extends State<Routes> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
                         controller: homeaddressController,
+                        enabled: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Home address",
@@ -143,25 +160,8 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: modelController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: "Model",
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextFormField(
                         controller: previousreadingController,
+                        enabled: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Previous reading",
@@ -188,6 +188,25 @@ class _RoutesState extends State<Routes> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.1),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextFormField(
+                        controller: unitsController,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: "Units",
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -200,7 +219,7 @@ class _RoutesState extends State<Routes> {
                             id: 6,
                             accountname: accountnameController.text,
                             accountno: accountnoController.text,
-                            model: modelController.text,
+                            units: unitsController.text,
                             currentreading: currentreadingController.text,
                             previousreading: previousreadingController.text,
                             homeaddress: homeaddressController.text,
@@ -212,7 +231,15 @@ class _RoutesState extends State<Routes> {
                             //   content: Text("Route saved"),
                             // );
                             // Scaffold.of(context).showSnackBar(snackBar);
-                            print("data saved");
+                            // print("data saved");
+                            Fluttertoast.showToast(
+                                msg: "This is Center Short Toast",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.blue,
+                                fontSize: 16.0);
                           } else {
                             // var snackBar = SnackBar(
                             //   content: Text("Error. Check code"),
