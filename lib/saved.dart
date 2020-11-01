@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'db_test.dart';
 
 class SavedRoutes extends StatefulWidget {
@@ -55,6 +54,7 @@ class _SavedRoutesState extends State<SavedRoutes> {
                     subtitle:
                         Text("Account Number ${data[index]["accountno"]}"),
                     trailing: IconButton(
+                      onPressed: null,
                       icon: Icon(
                         Icons.send,
                         color: Colors.blue,

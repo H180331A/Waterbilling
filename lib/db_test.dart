@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_water/models/account_data.dart';
 import 'package:flutter_water/models/reading.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -8,6 +9,7 @@ class Helperx {
   static Database _database;
 
   String waterBillingTable = 'waterbilling';
+  String waterBillingAccountsData = 'waterbillingaccountsdata';
   String id = 'id';
   String accountname = 'accountname';
   String accountno = 'accountno';
@@ -49,7 +51,9 @@ class Helperx {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $waterBillingTable($id INTEGER PRIMARY KEY AUTOINCREMENT, $accountname TEXT, $accountno TEXT, $previousreading TEXT, $homeaddress TEXT, $currentreading TEXT, $units TEXT, $meternumber TEXT, $status TEXT, $isPosted TEXT)');
+        'CREATE TABLE $waterBillingTable($id INTEGER PRIMARY KEY AUTOINCREMENT, $accountname TEXT, $accountno TEXT, $previousreading TEXT, $homeaddress TEXT, $currentreading TEXT, $model TEXT, $meternumber TEXT, $status TEXT, $isPosted TEXT)');
+    await db.execute(
+        'CREATE TABLE $waterBillingAccountsData($id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT, updated_at TEXT, account_number TEXT, name TEXT, house_number TEXT, street_name TEXT, area TEXT, meter_number TEXT, account_id TEXT, model TEXT, status TEXT, route_id TEXT, meter_id TEXT, reading TEXT, reader TEXT)');
   }
 
   Future<List<Map<String, dynamic>>> getReadingsList() async {
@@ -58,9 +62,22 @@ class Helperx {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> getSavedAccountsData() async {
+    Database db = await this.database;
+    var result = await db.query(waterBillingAccountsData);
+    return result;
+  }
+
   Future<int> saveReading(Reading reading) async {
     Database db = await this.database;
     var result = await db.insert(waterBillingTable, reading.toMap());
+    return result;
+  }
+
+  Future<int> saveAccounts(AccountData accountData) async {
+    Database db = await this.database;
+    var result =
+        await db.insert(waterBillingAccountsData, accountData.toJson());
     return result;
   }
 
@@ -73,5 +90,16 @@ class Helperx {
       whereArgs: [reading.id],
     );
     return result;
+  }
+
+  Future<bool> deleteAccountsData() async {
+    try {
+      Database db = await this.database;
+      var result = await db.delete(waterBillingAccountsData);
+      return true;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
   }
 }
