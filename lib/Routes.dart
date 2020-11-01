@@ -1,7 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_water/Home_Page.dart';
 import 'package:flutter_water/db_test.dart';
 import 'package:flutter_water/models/reading.dart';
@@ -12,17 +11,18 @@ class Routes extends StatefulWidget {
 }
 
 class _RoutesState extends State<Routes> {
-  TextEditingController accountnameController = TextEditingController();
-  TextEditingController accountnoController = TextEditingController();
+  TextEditingController accountNameController = TextEditingController();
+  TextEditingController accountNoController = TextEditingController();
   TextEditingController modelController = TextEditingController();
-  TextEditingController previousreadingController = TextEditingController();
-  TextEditingController meternumberController = TextEditingController();
-  TextEditingController currentreadingController = TextEditingController();
-  TextEditingController homeaddressController = TextEditingController();
+  TextEditingController previousReadingController = TextEditingController();
+  TextEditingController meterNumberController = TextEditingController();
+  TextEditingController currentReadingController = TextEditingController();
+  TextEditingController homeAddressController = TextEditingController();
 
-  String dropdownValue = "One";
-
+  var dbData;
   get handleClick => null;
+  Helperx _helper = new Helperx();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,31 +52,70 @@ class _RoutesState extends State<Routes> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text("Meter Number")),
-                Container(
-                  child: Center(
-                    child: DropdownButton<String>(
-                      value: dropdownValue,
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(color: Colors.deepPurple),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
-                      },
-                      items: <String>['One', 'Two', 'Three', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                          ),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: TextFormField(
+                              controller: meterNumberController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                labelText: "Meter Number",
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Container(
+                            color: Colors.blue,
+                            child: MaterialButton(
+                              child: Text(
+                                "Lookup",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onPressed: () async {
+                                var dbData =
+                                    await _helper.getSavedAccountsData();
+                                var lookedUpItem = dbData
+                                    .where((element) =>
+                                        element["meter_number"] ==
+                                        meterNumberController.text)
+                                    .toList();
+                                print(lookedUpItem);
+                                if (lookedUpItem != null ||
+                                    lookedUpItem.length > 0) {
+                                  setState(() {
+                                    accountNoController.text =
+                                        lookedUpItem[0]["account_number"];
+                                    accountNameController.text =
+                                        lookedUpItem[0]["name"];
+                                    homeAddressController.text =
+                                        "${lookedUpItem[0]["house_number"]}, ${lookedUpItem[0]["street_name"]}, ${lookedUpItem[0]["area"]}";
+                                    modelController.text =
+                                        lookedUpItem[0]["model"];
+                                    previousReadingController.text =
+                                        lookedUpItem[0]["reading"];
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -89,11 +128,12 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: accountnoController,
+                        controller: accountNoController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Account no",
                         ),
+                        readOnly: true,
                       ),
                     ),
                   ),
@@ -107,11 +147,12 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: accountnameController,
+                        controller: accountNameController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Account name",
                         ),
+                        readOnly: true,
                       ),
                     ),
                   ),
@@ -125,11 +166,12 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: homeaddressController,
+                        controller: homeAddressController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Home address",
                         ),
+                        readOnly: true,
                       ),
                     ),
                   ),
@@ -148,6 +190,7 @@ class _RoutesState extends State<Routes> {
                           border: InputBorder.none,
                           labelText: "Model",
                         ),
+                        readOnly: true,
                       ),
                     ),
                   ),
@@ -161,11 +204,12 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: previousreadingController,
+                        controller: previousReadingController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Previous reading",
                         ),
+                        readOnly: true,
                       ),
                     ),
                   ),
@@ -179,7 +223,7 @@ class _RoutesState extends State<Routes> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
-                        controller: currentreadingController,
+                        controller: currentReadingController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           labelText: "Current reading",
@@ -198,12 +242,12 @@ class _RoutesState extends State<Routes> {
                           var helper = new Helperx();
                           var reading = new Reading(
                             id: 6,
-                            accountname: accountnameController.text,
-                            accountno: accountnoController.text,
+                            accountname: accountNameController.text,
+                            accountno: accountNoController.text,
                             model: modelController.text,
-                            currentreading: currentreadingController.text,
-                            previousreading: previousreadingController.text,
-                            homeaddress: homeaddressController.text,
+                            currentreading: currentReadingController.text,
+                            previousreading: previousReadingController.text,
+                            homeaddress: homeAddressController.text,
                           );
                           var isSaved = await helper.saveReading(reading);
                           print(isSaved);

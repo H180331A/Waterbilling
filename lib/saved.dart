@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'db_test.dart';
 import 'db_test.dart';
 
 class SavedRoutes extends StatefulWidget {
@@ -45,12 +43,22 @@ class _SavedRoutesState extends State<SavedRoutes> {
                     leading: CircleAvatar(
                       child: Icon(Icons.home),
                     ),
-                    title: Text(data[index]["accountname"] != null
-                        ? "Account Name: ${data[index]["accountname"]}"
-                        : "Account Name: Missing value", style: TextStyle(fontWeight: FontWeight.bold,),),
-                    subtitle: Text("Account Number ${data[index]["accountno"]}"),
+                    title: Text(
+                      data[index]["accountname"] != null
+                          ? "Account Name: ${data[index]["accountname"]}"
+                          : "Account Name: Missing value",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle:
+                        Text("Account Number ${data[index]["accountno"]}"),
                     trailing: IconButton(
-                      icon: Icon(Icons.send, color: Colors.blue,),
+                      onPressed: null,
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.blue,
+                      ),
                     ),
                   );
                 });

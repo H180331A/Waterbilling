@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:flutter_water/db_test.dart';
+import 'package:flutter_water/models/account_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
-  String _url = "http://192.168.1.125:81/api";
+  String _url = "http://10.15.16.127:81/api";
+  Helperx _helper = new Helperx();
 
   login(username, password) async {
     var response;
@@ -39,7 +42,6 @@ class Api {
       response = await http.get("$_url/routes?api_token=$token",
           headers: {"Accept": "application/json"});
       if (response.statusCode == 200) {
-        print(response);
         return json.decode(response.body);
       } else {
         return false;
@@ -61,6 +63,28 @@ class Api {
         return true;
       }
     } on SocketException catch (e) {
+      print(e);
+    }
+  }
+
+  fetchDetailsByRoutes(List<String> routes) async {
+    var response;
+    try {
+      routes.forEach((route) async {
+        response = await http.post("$_url/account_details", body: {
+          "route": route,
+        });
+        var data = json.decode(response.body);
+        for (var dt in data) {
+          var acc_dt = AccountData.fromJson(dt);
+          var try_saving = await _helper.saveAccounts(acc_dt);
+          if (try_saving == null) {
+            print("an error might have occured");
+          }
+        }
+      });
+      return true;
+    } on Exception catch (e) {
       print(e);
     }
   }
