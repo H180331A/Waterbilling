@@ -12,11 +12,11 @@ dependencies:
   sqflite:
   path:
   path_provider:
-
   cupertino_icons: ^0.1.3
   dropdownfield: ^1.0.3
   http:
-
+  device_info: ^0.4.1+5
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_water/History.dart';
 import 'package:flutter_water/Routes.dart';
 import 'package:flutter_water/login.dart';
+import 'package:flutter_water/routes_page.dart';
 import 'package:flutter_water/saved.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,6 +28,13 @@ class _HomePageState extends State<HomePage> {
               ),
             );
             break;
+          case "Routes":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => RoutesPage(),
+              ),
+            );
+            break;
           case "Back":
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => LoginPage()),
@@ -43,7 +51,8 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'History', 'Saved Routes', 'Back'}.map((String choice) {
+              return {'History', 'Saved Routes', 'Routes', 'Back'}
+                  .map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
